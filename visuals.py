@@ -14,11 +14,13 @@ city = ''
 
 
 def is_img_light(img, thrshld):
-    is_light = np.mean(img) > thrshld
-    return 'light' if is_light else 'dark'
+    """returns True if overal color of image is light"""
+    return np.mean(img) > thrshld
+
 
 
 def get_text_color(plaatje):
+    """returns textcolor depending on the overal light in an image"""
     f = imageio.v2.imread(plaatje, mode=False)
     print(is_img_light(f, 127))
     if (is_img_light(f, 127)) == 'dark':
@@ -27,38 +29,43 @@ def get_text_color(plaatje):
         return 'black'
 
 
-def process_images_from_directory(weer_data):
-    files = os.listdir(path)
-
-    for file in files:
-        print(file)
-    print(weer_data['samenv'].lower())
-
-    #get picture depending on the weather
-    plaatje = choose_weather_img(weer_data['samenv'].lower(), weer_data['zonop'], weer_data['zononder'])
-    create_ui(plaatje, weer_data)
-
-
 def get_text_for_ui(weer_data):
     theta = '\N{DEGREE SIGN}'
-    weer = str(weer_data['samenv'] + '\n\n' + 'Verwachting: ' + '\n' +
-               weer_data['verw'] + '\n\n' + 'Windkracht: ' + weer_data[
-                   'wind'] + '\n' + 'Temperatuur: ' + weer_data['temp'] + theta + '\n\n' + 'Zonsopkomst: ' + weer_data[
-                   'zonop'] +
-               '\n' + 'Zonsondergang: ' + weer_data['zononder'])
+    #weer_data['verw'] + '\n\n' + 'Windkracht: ' + weer_data[
+                  # 'wind'] + '\n' + 'Temperatuur: ' + weer_data['temp'] + theta + '\n\n' + 'Zonsopkomst: ' + weer_data[
+                  # 'zonop'] +
+               #'\n' + 'Zonsondergang: ' + weer_data['zononder'])
+    weer = (f"{weer_data['samenv']}\n\nVerwachting:\n{weer_data['verw']}\n\nWindkracht: {weer_data['wind']}\n"
+            f"Temperatuur: {weer_data['temp']}{theta}\n\nZonsopkomst: {weer_data['zonop']}\nZonsondergang: {weer_data['zononder']}")
     return weer
 
 
-def create_ui(background_img, weer_data):
-    ct = datetime.datetime.now()
+def create_ui( weer_data):
+    """
+    gets image depending on the weather
+    gets the forecast to show in UI
+    gets the textcolor for text printed on the image. If image is light textcolor is dark and visa versa
+    calls the method to build the GUI with all this data
+    :param background_img: background image depending on the weather
+    :param weer_data: the weather dict received from weerlive API call
+    :returns:
+    """
+    background_img = choose_weather_img(weer_data['samenv'].lower(), weer_data['zonop'], weer_data['zononder'])
     weer = get_text_for_ui(weer_data)
     color_text = get_text_color(background_img)
-    print(background_img)
     datum = night_day_time.get_time_values(weer_data['zonop'], weer_data['zononder'])
     start_gui(weer_data['plaats'], weer, color_text, background_img, datum)
 
 
 def choose_weather_img(samenv, zonop, zononder):
+    """
+    returns a image of clouds, sun, rain ect ect depending on the forecast and if it is day or night.
+    :param samenv: summary of the weather on that moment
+    :param zonop: time the sun goes up
+    :param zononder: time the sun goes down
+    :return: weather image
+    """
+    #TODO: Change to regex searching (re.findall(pattern))
     if 'onweer' in samenv:
         image = 'onweer_regen'
     elif 'bewolkt' in samenv and 'regen' in samenv:

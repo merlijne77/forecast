@@ -15,6 +15,11 @@ def getKey():
 
 
 def forcast(city):
+    """
+    calls the weather Api from liveweer.nl with the forecast from a village or city in the Netherlands
+    :param city: village or city in the netherlands
+    :return: json with the forecast
+    """
     link = "https://weerlive.nl/api/json-data-10min.php?key=6afe9341be&locatie=Rotterdam"
     key = getKey()
     link_with_cor = f"https://weerlive.nl/api/json-data-10min.php?key={key}&locatie=" + city
@@ -25,6 +30,11 @@ def forcast(city):
 
 
 def process_data(city='Rotterdam'):
+    """
+    puts the json data in to a dict
+    :param city:
+    :return: weer_data dict with all the forecast data
+    """
     data = forcast(city)
     verw = data['liveweer'][0]['verw']
     verw = newline_str(verw)
@@ -37,10 +47,11 @@ def process_data(city='Rotterdam'):
                  'plaats': data['liveweer'][0]['plaats'],
                  'samenv': data['liveweer'][0]['samenv']}
 
-    visuals.process_images_from_directory(weer_data)
+    visuals.create_ui(weer_data)
 
 
 def newline_str(text):
+    """creates a newline with every dot or comma in the text"""
     text = text.replace('.','.\n').replace(',',',\n')
     return text
 

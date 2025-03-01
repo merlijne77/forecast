@@ -1,5 +1,4 @@
-#is current time between two given timemoments? In my case sun up sun under?
-# using datetime module
+
 import datetime
 import locale
 
@@ -22,7 +21,7 @@ def get_time_values(sun_up, sun_under):
     return time_dict
 
 
-#veranderen met dateTime math methodes
+#TODO: make this more efficient code
 def is_time_in_range(sun_up, sun_under):
    time_dict = get_time_values(sun_up, sun_under)
    if time_dict['curr_hour'] == time_dict['sun_up_hour'] and time_dict['curr_minute'] > time_dict['sun_up_minute']:
@@ -31,6 +30,6 @@ def is_time_in_range(sun_up, sun_under):
        return True
    elif time_dict['sun_up_hour'] < time_dict['curr_hour'] < time_dict['sun_under_hour']:
        return True
-   else:
-       return False
+
+   return False
 
