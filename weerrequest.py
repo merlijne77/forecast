@@ -1,10 +1,10 @@
 import json
+import re
+
 import requests
 import visuals
 
-
 weer = ' '
-
 
 def getKey():
     file_path = "/home/heidi/PycharmProjects/Python/weather_app/build/assets/info.txt"
@@ -37,7 +37,7 @@ def process_data(city='Rotterdam'):
     """
     data = forcast(city)
     verw = data['liveweer'][0]['verw']
-    verw = newline_str(verw)
+    verw = newline_str(verw, 4)
 
     weer_data = {'zonop': data['liveweer'][0]['sup'],
                  'zononder': data['liveweer'][0]['sunder'],
@@ -50,9 +50,15 @@ def process_data(city='Rotterdam'):
     visuals.create_ui(weer_data)
 
 
-def newline_str(text):
-    """creates a newline with every dot or comma in the text"""
-    text = text.replace('.','.\n').replace(',',',\n')
-    return text
+def newline_str(text, num_of_words):
+    count = 0
+    text_fits = ''
+    for word in text.split(" "):
+        text_fits = text_fits + word + ' '
+        if count == num_of_words:
+            text_fits = text_fits + '\n'#add new line
+            count = 0
+        count = count + 1
+    return re.sub(r"$\n", '.', text_fits)#replace last end of line with a dot
 
 #TODO: New API link (LIVEWEER) Available. Implement before december 2025
