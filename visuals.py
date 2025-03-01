@@ -7,9 +7,6 @@ import night_day_time
 from the_gui import start_gui
 
 
-#TODO: tijd 2 decimalen terughalen uit git nieuwe versies
-#TODO: Check if image is dark terughalen uit git nieuwe versies textcolor veranderen
-#TODO: Bij een refresh de city even bewaren
 global img
 path = r"/home/heidi/PycharmProjects/Python/weather_app/build/assets/frame0/"
 path_refresh_icon = '/home/heidi/refresh.png'
